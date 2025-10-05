@@ -50,6 +50,37 @@
         background-color: rgba(144, 238, 144, 0.3);
         border: 2px dashed rgba(144, 238, 144, 0.7);
       }
+      /* New styles for value labels */
+      .value-label {
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-family: monospace;
+        white-space: nowrap;
+      }
+      .label-top {
+        top: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .label-bottom {
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .label-left {
+        left: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .label-right {
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
     </style>
   </head>
   <body class="bg-gray-900 text-white antialiased">
@@ -145,27 +176,49 @@
           <!-- Margin -->
           <div class="mt-4">
             <p class="text-sm font-medium text-gray-300 mb-1">Margin (px)</p>
-            <div class="grid grid-cols-2 gap-2">
-              <input
-                type="number"
-                id="margin-top"
-                placeholder="Top"
-                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
-              <input
-                type="number"
-                id="margin-right"
-                placeholder="Right"
-                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
-              <input
-                type="number"
-                id="margin-bottom"
-                placeholder="Bottom"
-                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
-              <input
-                type="number"
-                id="margin-left"
-                placeholder="Left"
-                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="margin-top" class="block text-xs text-gray-400 mb-1"
+                  >Top</label
+                >
+                <input
+                  type="number"
+                  id="margin-top"
+                  class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              </div>
+              <div>
+                <label
+                  for="margin-right"
+                  class="block text-xs text-gray-400 mb-1"
+                  >Right</label
+                >
+                <input
+                  type="number"
+                  id="margin-right"
+                  class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              </div>
+              <div>
+                <label
+                  for="margin-bottom"
+                  class="block text-xs text-gray-400 mb-1"
+                  >Bottom</label
+                >
+                <input
+                  type="number"
+                  id="margin-bottom"
+                  class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              </div>
+              <div>
+                <label
+                  for="margin-left"
+                  class="block text-xs text-gray-400 mb-1"
+                  >Left</label
+                >
+                <input
+                  type="number"
+                  id="margin-left"
+                  class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              </div>
             </div>
           </div>
 
@@ -199,27 +252,51 @@
           <!-- Padding -->
           <div class="mt-4">
             <p class="text-sm font-medium text-gray-300 mb-1">Padding (px)</p>
-            <div class="grid grid-cols-2 gap-2">
-              <input
-                type="number"
-                id="padding-top"
-                placeholder="Top"
-                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
-              <input
-                type="number"
-                id="padding-right"
-                placeholder="Right"
-                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
-              <input
-                type="number"
-                id="padding-bottom"
-                placeholder="Bottom"
-                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
-              <input
-                type="number"
-                id="padding-left"
-                placeholder="Left"
-                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label
+                  for="padding-top"
+                  class="block text-xs text-gray-400 mb-1"
+                  >Top</label
+                >
+                <input
+                  type="number"
+                  id="padding-top"
+                  class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              </div>
+              <div>
+                <label
+                  for="padding-right"
+                  class="block text-xs text-gray-400 mb-1"
+                  >Right</label
+                >
+                <input
+                  type="number"
+                  id="padding-right"
+                  class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              </div>
+              <div>
+                <label
+                  for="padding-bottom"
+                  class="block text-xs text-gray-400 mb-1"
+                  >Bottom</label
+                >
+                <input
+                  type="number"
+                  id="padding-bottom"
+                  class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              </div>
+              <div>
+                <label
+                  for="padding-left"
+                  class="block text-xs text-gray-400 mb-1"
+                  >Left</label
+                >
+                <input
+                  type="number"
+                  id="padding-left"
+                  class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              </div>
             </div>
           </div>
           <!-- Alignment -->
@@ -389,6 +466,54 @@
 
               itemEl.appendChild(paddingVisual);
               itemEl.appendChild(marginVisual);
+
+              // --- Display Margin & Padding values ---
+              const createLabel = (value, type, position) => {
+                if (value <= 0) return null;
+                const label = document.createElement("span");
+                label.className = `value-label label-${position}`;
+                label.textContent = `${value}px`;
+                return label;
+              };
+
+              const labels = [
+                {
+                  el: createLabel(margin.top, "margin", "top"),
+                  container: marginVisual,
+                },
+                {
+                  el: createLabel(margin.right, "margin", "right"),
+                  container: marginVisual,
+                },
+                {
+                  el: createLabel(margin.bottom, "margin", "bottom"),
+                  container: marginVisual,
+                },
+                {
+                  el: createLabel(margin.left, "margin", "left"),
+                  container: marginVisual,
+                },
+                {
+                  el: createLabel(padding.top, "padding", "top"),
+                  container: paddingVisual,
+                },
+                {
+                  el: createLabel(padding.right, "padding", "right"),
+                  container: paddingVisual,
+                },
+                {
+                  el: createLabel(padding.bottom, "padding", "bottom"),
+                  container: paddingVisual,
+                },
+                {
+                  el: createLabel(padding.left, "padding", "left"),
+                  container: paddingVisual,
+                },
+              ];
+
+              labels.forEach(({ el, container }) => {
+                if (el) container.appendChild(el);
+              });
             }
 
             gridContainer.appendChild(itemEl);
