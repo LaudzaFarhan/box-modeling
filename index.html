@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Grid & Box Model Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet" />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Custom scrollbar for better aesthetics */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #2d3748;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #4a5568;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #718096;
+      }
+      /* Style for the visual representation of box model parts */
+      .grid-item-visual {
+        position: relative;
+        background-clip: padding-box !important; /* Ensures background doesn't go under the border */
+      }
+      .margin-visual {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        outline: 2px dashed rgba(255, 165, 0, 0.7);
+        outline-offset: -2px;
+        z-index: -1;
+      }
+      .padding-visual {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(144, 238, 144, 0.3);
+        border: 2px dashed rgba(144, 238, 144, 0.7);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-white antialiased">
+    <div class="flex flex-col lg:flex-row h-screen overflow-hidden">
+      <!-- CONTROLS PANEL -->
+      <aside class="w-full lg:w-96 bg-gray-800 p-6 overflow-y-auto">
+        <h1 class="text-2xl font-bold text-cyan-400 mb-2">
+          CSS Grid & Box Model
+        </h1>
+        <p class="text-gray-400 mb-6 text-sm">
+          An interactive tool to learn CSS layout concepts.
+        </p>
+
+        <!-- Grid Container Controls -->
+        <div class="bg-gray-700 p-4 rounded-lg mb-6">
+          <h2 class="font-semibold mb-3 text-lg border-b border-gray-600 pb-2">
+            Grid Container
+          </h2>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                for="grid-cols"
+                class="block text-sm font-medium text-gray-300"
+                >Columns</label
+              >
+              <input
+                type="text"
+                id="grid-cols"
+                value="repeat(3, 1fr)"
+                class="mt-1 block w-full bg-gray-800 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 text-sm p-2" />
+            </div>
+            <div>
+              <label
+                for="grid-rows"
+                class="block text-sm font-medium text-gray-300"
+                >Rows</label
+              >
+              <input
+                type="text"
+                id="grid-rows"
+                value="auto"
+                class="mt-1 block w-full bg-gray-800 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 text-sm p-2" />
+            </div>
+            <div>
+              <label
+                for="col-gap"
+                class="block text-sm font-medium text-gray-300"
+                >Column Gap (px)</label
+              >
+              <input
+                type="number"
+                id="col-gap"
+                value="16"
+                class="mt-1 block w-full bg-gray-800 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 text-sm p-2" />
+            </div>
+            <div>
+              <label
+                for="row-gap"
+                class="block text-sm font-medium text-gray-300"
+                >Row Gap (px)</label
+              >
+              <input
+                type="number"
+                id="row-gap"
+                value="16"
+                class="mt-1 block w-full bg-gray-800 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 text-sm p-2" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid Item (Box Model) Controls -->
+        <div
+          id="box-model-controls"
+          class="bg-gray-700 p-4 rounded-lg mb-6 hidden">
+          <h2 class="font-semibold mb-3 text-lg border-b border-gray-600 pb-2">
+            Selected Item:
+            <span id="selected-item-id" class="text-cyan-400 font-mono"></span>
+          </h2>
+
+          <!-- Content -->
+          <div>
+            <label
+              for="item-content"
+              class="block text-sm font-medium text-gray-300"
+              >Content</label
+            >
+            <textarea
+              id="item-content"
+              rows="3"
+              class="mt-1 block w-full bg-gray-800 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500 text-sm p-2"></textarea>
+          </div>
+
+          <!-- Margin -->
+          <div class="mt-4">
+            <p class="text-sm font-medium text-gray-300 mb-1">Margin (px)</p>
+            <div class="grid grid-cols-2 gap-2">
+              <input
+                type="number"
+                id="margin-top"
+                placeholder="Top"
+                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              <input
+                type="number"
+                id="margin-right"
+                placeholder="Right"
+                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              <input
+                type="number"
+                id="margin-bottom"
+                placeholder="Bottom"
+                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              <input
+                type="number"
+                id="margin-left"
+                placeholder="Left"
+                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+            </div>
+          </div>
+
+          <!-- Border -->
+          <div class="mt-4">
+            <p class="text-sm font-medium text-gray-300 mb-1">Border</p>
+            <div class="grid grid-cols-3 gap-2">
+              <input
+                type="number"
+                id="border-width"
+                placeholder="Width (px)"
+                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              <select
+                id="border-style"
+                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm">
+                <option>solid</option>
+                <option>dashed</option>
+                <option>dotted</option>
+                <option>double</option>
+                <option>groove</option>
+                <option>ridge</option>
+              </select>
+              <input
+                type="color"
+                id="border-color"
+                value="#38bdf8"
+                class="w-full bg-gray-800 border-gray-600 rounded-md h-10" />
+            </div>
+          </div>
+
+          <!-- Padding -->
+          <div class="mt-4">
+            <p class="text-sm font-medium text-gray-300 mb-1">Padding (px)</p>
+            <div class="grid grid-cols-2 gap-2">
+              <input
+                type="number"
+                id="padding-top"
+                placeholder="Top"
+                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              <input
+                type="number"
+                id="padding-right"
+                placeholder="Right"
+                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              <input
+                type="number"
+                id="padding-bottom"
+                placeholder="Bottom"
+                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+              <input
+                type="number"
+                id="padding-left"
+                placeholder="Left"
+                class="w-full bg-gray-800 border-gray-600 rounded-md p-2 text-sm" />
+            </div>
+          </div>
+          <!-- Alignment -->
+          <div class="mt-4">
+            <button
+              id="toggle-alignment"
+              class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-md transition duration-300">
+              Center Content
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="no-item-selected"
+          class="text-center bg-gray-700 p-4 rounded-lg text-gray-400">
+          <p>Click an item in the grid to edit its Box Model properties.</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex space-x-4 mt-6">
+          <button
+            id="add-item"
+            class="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-md transition duration-300">
+            Add Item
+          </button>
+          <button
+            id="reset-all"
+            class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md transition duration-300">
+            Reset
+          </button>
+        </div>
+      </aside>
+
+      <!-- VISUALIZATION AREA -->
+      <main
+        class="flex-1 bg-gray-900 p-8 flex items-center justify-center overflow-auto">
+        <div
+          id="grid-container-wrapper"
+          class="w-full h-full max-w-6xl max-h-[80vh] bg-gray-800/50 p-4 rounded-lg border border-dashed border-gray-700">
+          <div id="grid-container" class="w-full h-full">
+            <!-- Grid items will be generated here by JavaScript -->
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // DOM Elements
+        const gridContainer = document.getElementById("grid-container");
+        const gridControls = {
+          gridCols: document.getElementById("grid-cols"),
+          gridRows: document.getElementById("grid-rows"),
+          colGap: document.getElementById("col-gap"),
+          rowGap: document.getElementById("row-gap"),
+        };
+        const boxModelInputs = {
+          itemContent: document.getElementById("item-content"),
+          marginTop: document.getElementById("margin-top"),
+          marginRight: document.getElementById("margin-right"),
+          marginBottom: document.getElementById("margin-bottom"),
+          marginLeft: document.getElementById("margin-left"),
+          borderWidth: document.getElementById("border-width"),
+          borderStyle: document.getElementById("border-style"),
+          borderColor: document.getElementById("border-color"),
+          paddingTop: document.getElementById("padding-top"),
+          paddingRight: document.getElementById("padding-right"),
+          paddingBottom: document.getElementById("padding-bottom"),
+          paddingLeft: document.getElementById("padding-left"),
+        };
+        const addItemBtn = document.getElementById("add-item");
+        const resetBtn = document.getElementById("reset-all");
+        const boxModelControls = document.getElementById("box-model-controls");
+        const noItemSelectedMsg = document.getElementById("no-item-selected");
+        const selectedItemIdSpan = document.getElementById("selected-item-id");
+        const toggleAlignmentBtn = document.getElementById("toggle-alignment");
+
+        // --- STATE MANAGEMENT ---
+        let selectedItemIndex = null;
+        let items = [];
+
+        const createDefaultItem = (id) => ({
+          id,
+          content: `Item ${id}`,
+          margin: { top: 0, right: 0, bottom: 0, left: 0 },
+          border: { width: 2, style: "solid", color: "#38bdf8" },
+          padding: { top: 16, right: 16, bottom: 16, left: 16 },
+          alignment: "start", // 'start' or 'center'
+        });
+
+        // --- INITIALIZATION ---
+        function init() {
+          items = [
+            createDefaultItem(1),
+            createDefaultItem(2),
+            createDefaultItem(3),
+          ];
+          selectedItemIndex = null;
+          gridControls.gridCols.value = "repeat(3, 1fr)";
+          gridControls.gridRows.value = "auto";
+          gridControls.colGap.value = 16;
+          gridControls.rowGap.value = 16;
+          render();
+        }
+
+        // --- RENDER FUNCTION ---
+        function render() {
+          // 1. Update Grid Container Styles
+          gridContainer.style.display = "grid";
+          gridContainer.style.gridTemplateColumns = gridControls.gridCols.value;
+          gridContainer.style.gridTemplateRows = gridControls.gridRows.value;
+          gridContainer.style.columnGap = `${gridControls.colGap.value}px`;
+          gridContainer.style.rowGap = `${gridControls.rowGap.value}px`;
+
+          // 2. Clear and Re-render Grid Items
+          gridContainer.innerHTML = "";
+          items.forEach((item, index) => {
+            const itemEl = document.createElement("div");
+            itemEl.className =
+              "grid-item-visual bg-gray-700 flex text-center rounded-lg transition-all duration-200 cursor-pointer relative";
+            itemEl.dataset.index = index;
+
+            // Apply alignment
+            if (item.alignment === "center") {
+              itemEl.classList.add("items-center", "justify-center");
+            } else {
+              itemEl.classList.add("items-start", "justify-start");
+            }
+
+            // Apply Box Model styles
+            const { margin, border, padding, content } = item;
+            itemEl.style.marginTop = `${margin.top}px`;
+            itemEl.style.marginRight = `${margin.right}px`;
+            itemEl.style.marginBottom = `${margin.bottom}px`;
+            itemEl.style.marginLeft = `${margin.left}px`;
+
+            itemEl.style.border = `${border.width}px ${border.style} ${border.color}`;
+
+            itemEl.style.paddingTop = `${padding.top}px`;
+            itemEl.style.paddingRight = `${padding.right}px`;
+            itemEl.style.paddingBottom = `${padding.bottom}px`;
+            itemEl.style.paddingLeft = `${padding.left}px`;
+
+            itemEl.textContent = content;
+
+            if (index === selectedItemIndex) {
+              itemEl.classList.add(
+                "ring-4",
+                "ring-offset-2",
+                "ring-offset-gray-900",
+                "ring-cyan-400"
+              );
+              // Add visual helpers for margin and padding
+              const marginVisual = document.createElement("div");
+              marginVisual.className = "margin-visual";
+              marginVisual.style.top = `-${margin.top}px`;
+              marginVisual.style.right = `-${margin.right}px`;
+              marginVisual.style.bottom = `-${margin.bottom}px`;
+              marginVisual.style.left = `-${margin.left}px`;
+
+              const paddingVisual = document.createElement("div");
+              paddingVisual.className = "padding-visual";
+              paddingVisual.style.top = `${border.width}px`;
+              paddingVisual.style.right = `${border.width}px`;
+              paddingVisual.style.bottom = `${border.width}px`;
+              paddingVisual.style.left = `${border.width}px`;
+
+              itemEl.appendChild(paddingVisual);
+              itemEl.appendChild(marginVisual);
+            }
+
+            gridContainer.appendChild(itemEl);
+          });
+
+          // 3. Update Controls Panel UI
+          if (selectedItemIndex !== null) {
+            boxModelControls.classList.remove("hidden");
+            noItemSelectedMsg.classList.add("hidden");
+            updateControlsPanel();
+          } else {
+            boxModelControls.classList.add("hidden");
+            noItemSelectedMsg.classList.remove("hidden");
+          }
+        }
+
+        // --- UPDATE CONTROLS PANEL ---
+        function updateControlsPanel() {
+          if (selectedItemIndex === null) return;
+
+          const item = items[selectedItemIndex];
+          selectedItemIdSpan.textContent = `#${item.id}`;
+
+          boxModelInputs.itemContent.value = item.content;
+          boxModelInputs.marginTop.value = item.margin.top;
+          boxModelInputs.marginRight.value = item.margin.right;
+          boxModelInputs.marginBottom.value = item.margin.bottom;
+          boxModelInputs.marginLeft.value = item.margin.left;
+          boxModelInputs.borderWidth.value = item.border.width;
+          boxModelInputs.borderStyle.value = item.border.style;
+          boxModelInputs.borderColor.value = item.border.color;
+          boxModelInputs.paddingTop.value = item.padding.top;
+          boxModelInputs.paddingRight.value = item.padding.right;
+          boxModelInputs.paddingBottom.value = item.padding.bottom;
+          boxModelInputs.paddingLeft.value = item.padding.left;
+
+          // Update alignment button text
+          if (item.alignment === "center") {
+            toggleAlignmentBtn.textContent = "Align Top-Left";
+          } else {
+            toggleAlignmentBtn.textContent = "Center Content";
+          }
+        }
+
+        // --- EVENT HANDLERS ---
+        function handleGridChange() {
+          render();
+        }
+
+        function handleBoxModelChange() {
+          if (selectedItemIndex === null) return;
+
+          const item = items[selectedItemIndex];
+          item.content = boxModelInputs.itemContent.value;
+          item.margin.top = parseInt(boxModelInputs.marginTop.value) || 0;
+          item.margin.right = parseInt(boxModelInputs.marginRight.value) || 0;
+          item.margin.bottom = parseInt(boxModelInputs.marginBottom.value) || 0;
+          item.margin.left = parseInt(boxModelInputs.marginLeft.value) || 0;
+          item.border.width = parseInt(boxModelInputs.borderWidth.value) || 0;
+          item.border.style = boxModelInputs.borderStyle.value;
+          item.border.color = boxModelInputs.borderColor.value;
+          item.padding.top = parseInt(boxModelInputs.paddingTop.value) || 0;
+          item.padding.right = parseInt(boxModelInputs.paddingRight.value) || 0;
+          item.padding.bottom =
+            parseInt(boxModelInputs.paddingBottom.value) || 0;
+          item.padding.left = parseInt(boxModelInputs.paddingLeft.value) || 0;
+
+          render();
+        }
+
+        function handleItemClick(e) {
+          const target = e.target.closest(".grid-item-visual");
+          if (target) {
+            selectedItemIndex = parseInt(target.dataset.index);
+            render();
+          }
+        }
+
+        function handleAddItem() {
+          const newId =
+            items.length > 0 ? Math.max(...items.map((i) => i.id)) + 1 : 1;
+          items.push(createDefaultItem(newId));
+          render();
+        }
+
+        function handleToggleAlignment() {
+          if (selectedItemIndex === null) return;
+          const item = items[selectedItemIndex];
+          item.alignment = item.alignment === "center" ? "start" : "center";
+          render();
+        }
+
+        // --- EVENT LISTENERS ---
+        Object.values(boxModelInputs).forEach((input) => {
+          input.addEventListener("input", handleBoxModelChange);
+        });
+        Object.values(gridControls).forEach((input) => {
+          input.addEventListener("input", handleGridChange);
+        });
+
+        gridContainer.addEventListener("click", handleItemClick);
+        addItemBtn.addEventListener("click", handleAddItem);
+        resetBtn.addEventListener("click", init);
+        toggleAlignmentBtn.addEventListener("click", handleToggleAlignment);
+
+        // --- START THE APP ---
+        init();
+      });
+    </script>
+  </body>
+</html>
